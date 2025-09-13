@@ -3,6 +3,8 @@ package Entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -18,11 +20,11 @@ public class Book {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "author")
-    private String author;
+    @OneToMany
+    private List<Author> authors;
 
-    @Column(name = "genre")
-    private String genre;
+    @OneToMany
+    private List<Genre> genres;
 
     @Column(name = "published_year")
     private int published_year;
