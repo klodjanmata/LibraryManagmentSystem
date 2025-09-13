@@ -1,3 +1,4 @@
+
 package Util;
 
 import lombok.Getter;
@@ -5,22 +6,25 @@ import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
 public class HibernateUtil {
-        @Getter
-        private static final SessionFactory sessionFactory = buildSessionFactory();
+    @Getter
+    private static final SessionFactory sessionFactory = buildSessionFactory();
 
-        public static SessionFactory buildSessionFactory() {
-            try{
-                return new Configuration()
-                        .configure("hibernate.cfg.xml")
-                        .buildSessionFactory();
-            }catch(Exception e){
-                e.printStackTrace();
-            }
-            return null;
+    public static SessionFactory buildSessionFactory() {
+        try{
+            return new Configuration()
+                    .configure("hibernate.cfg.xml")
+                    .buildSessionFactory();
+        }catch(Exception e){
+            e.printStackTrace();
         }
-
-        public static void shutdown() {
-            sessionFactory.close();
-        }
-
+        return null;
     }
+
+    public static void shutdown() {
+        sessionFactory.close();
+    }
+
+}
+
+
+
