@@ -36,4 +36,12 @@ public class Helper {
     public static void closeScanner() {
         scanner.close();
     }
-}
+
+    public static int getIntFromUser(String chose) {
+        {
+
+        }
+
+        return 0;
+    }
+    }
