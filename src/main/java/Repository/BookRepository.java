@@ -1,59 +1,64 @@
 package Repository;
 
+import Entity.Book;
+import Util.HibernateUtil;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
+
 import java.util.List;
 
 public class BookRepository {
 
-    public Author create(Author author){
+    public Book create(Book book){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.persist(author);
+                session.persist(book);
                 transaction.commit();
-                return author;
+                return book;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return author;
+            return book;
         }
 
-        public Author read(Long id) {
+        public Book read(Long id) {
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                return session.get(Author.class,id);
+                return session.get(Book.class,id);
             }
         }
 
-        public Author update(Author author){
+        public Book update(Book book){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.merge(author);
+                session.merge(book);
                 transaction.commit();
-                return author;
+                return book;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return author;
+            return book;
         }
 
-        public Author delete(Author author){
+        public Book delete(Book book){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.remove(author);
+                session.remove(book);
                 transaction.commit();
-                return author;
+                return book;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return author;
+            return book;
         }
 
-        public List<Author> findAll() {
+        public List<Book> findAll() {
             Transaction transaction = null;
-            List<Author> authors = null;
+            List<Book> books = null;
 
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 transaction = session.beginTransaction();
 
-                authors = session.createQuery("from Author", Author.class).list();
+                books = session.createQuery("from Book", Book.class).list();
 
                 transaction.commit();
             } catch (Exception e) {
@@ -63,9 +68,6 @@ public class BookRepository {
                 e.printStackTrace();
             }
 
-            return authors;
+            return books;
         }
-
-    }
-
 }
