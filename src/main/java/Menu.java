@@ -1,7 +1,7 @@
-public class MenuManager {
+public class Menu {
 
 
-public static void MenuManager (){
+public static void Menu (){
     System.out.println("\n");
     System.out.println(" ********** Welcome to Library Management System  **********");
     System.out.println("Chose your action!");
