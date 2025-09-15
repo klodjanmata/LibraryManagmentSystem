@@ -1,6 +1,5 @@
 package Repository;
 
-import Entity.Author;
 import Entity.BorrowRecord;
 import Entity.Genre;
 import Util.HibernateUtil;
@@ -41,26 +40,26 @@ public class GenreRepository {
         return genre;
     }
 
-    public BorrowRecord delete(BorrowRecord borrowRecord){
+    public Genre delete(Genre genre){
         try(Session session = HibernateUtil.getSessionFactory().openSession()){
             Transaction transaction = session.beginTransaction();
-            session.remove(borrowRecord);
+            session.remove(genre);
             transaction.commit();
-            return borrowRecord;
+            return genre;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return borrowRecord;
+        return genre;
     }
 
-    public List<BorrowRecord> findAll() {
+    public List<Genre> findAll() {
         Transaction transaction = null;
-        List<BorrowRecord> borrowRecords = null;
+        List<Genre> genres = null;
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
 
-            borrowRecords = session.createQuery("from BorrowRecord", BorrowRecord.class).list();
+            genres = session.createQuery("from Genre", Genre.class).list();
 
             transaction.commit();
         } catch (Exception e) {
@@ -70,7 +69,7 @@ public class GenreRepository {
             e.printStackTrace();
         }
 
-        return borrowRecords;
+        return genres;
     }
 
 }

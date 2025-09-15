@@ -31,18 +31,6 @@ public class AuthorActions {
         authorList.add(author);
     }
 
-    public void printAllAuthor() {
-        System.out.println("######## Full Clients list ########");
-        System.out.println("ID\tName\tNationality\tBirthDate");
-        for (Author author : authorList){
-            System.out.println(
-                    author.getId() + "\t" +
-                            author.getName() + "\t" +
-                            author.getNationaity() + "\t" +
-                            author.getBirthDate());
-        }
-    }
-
     public List<Author> getAuthorList() {
         return authorList;
     }
@@ -51,4 +39,3 @@ public class AuthorActions {
         this.authorList = authorList;
     }
 }
-

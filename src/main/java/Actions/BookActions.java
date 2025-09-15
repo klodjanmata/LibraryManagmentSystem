@@ -2,8 +2,10 @@ package Actions;
 
 import Entity.Author;
 import Entity.Book;
+import Entity.Genre;
 import Repository.AuthorRepository;
 import Repository.BookRepository;
+import Repository.GenreRepository;
 import Util.Helper;
 import Util.Printer;
 
@@ -14,12 +16,13 @@ public class BookActions {
     private List<Book> bookList;
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
+    private GenreRepository genreRepository;
 
     public BookActions() {
         bookList = new ArrayList<>();
     }
 
-    private BookActions(ArrayList<Book> bookList) {
+    public BookActions(ArrayList<Book> bookList) {
         this.bookList = bookList;
     }
 
@@ -33,15 +36,30 @@ public class BookActions {
         return authors;
     }
 
+    private List<Genre> buildGenre(String input){
+        String[] ids = input.split(",");
+        List<Genre> genres = new ArrayList<>();
+        for (String i : ids){
+            Long id = Long.valueOf(i);
+            genres.add(genreRepository.read(id));
+        }
+        return genres;
+    }
+
     public void addBook() {
         System.out.println("Add the necessary book information");
         Book book = new Book();
         book.setTitle(Helper.getStringFromUser("Title"));
         Printer.printAuthors(authorRepository.findAll());
-        String input = Helper.getStringFromUser("Put in auth ids separated by ',' (1, 2, 3,)");
-        book.setAuthors(buildAuthors(input));
-        book.setNationaity(Helper.getStringFromUser("Nationality"));
-        book.setBirthDate(Helper.getLocalDateFromUser("BirthDate"));
+        String authorInput = Helper.getStringFromUser("Put in auth ids " +
+                "separated by ',' (1, 2, 3,)");
+        book.setAuthors(buildAuthors(authorInput));
+        Printer.printGenres(genreRepository.findAll());
+        String genreInput = Helper.getStringFromUser("Put in auth ids " +
+                "separated by ',' (1, 2, 3,)");
+        book.setGenres(buildGenre(genreInput));
+        book.setPublished_year(Helper.getIntFromUser("Published Year"));
+        book.setAvailable_copies(Helper.getIntFromUser("Number Of Available Copies"));
         bookRepository.create(book);
         System.out.println("Book with id: " + book.getId() + " added successfully");
         bookList.add(book);
