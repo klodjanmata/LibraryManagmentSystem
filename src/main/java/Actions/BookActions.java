@@ -8,18 +8,28 @@ import Repository.BookRepository;
 import Repository.GenreRepository;
 import Util.Helper;
 import Util.Printer;
+import lombok.Getter;
+import lombok.Setter;
+
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class BookActions {
+    @Setter
+    @Getter
     private List<Book> bookList;
     private BookRepository bookRepository;
     private AuthorRepository authorRepository;
     private GenreRepository genreRepository;
 
+
+
     public BookActions() {
-        bookList = new ArrayList<>();
+        this.bookRepository = bookRepository;
+        this.authorRepository = authorRepository;
+        this.genreRepository = genreRepository;
+        this.bookList = new ArrayList<>();
     }
 
     public BookActions(ArrayList<Book> bookList) {
@@ -57,8 +67,8 @@ public class BookActions {
         Printer.printGenres(genreRepository.findAll());
         String genreInput = Helper.getStringFromUser("Put in auth ids " +
                 "separated by ',' (1, 2, 3,)");
-        book.setGenres(buildGenre(genreInput));
-        book.setPublished_year(Helper.getIntFromUser("Published Year"));
+        book.setGenre(buildGenre(genreInput).toString());
+        book.setPublished_year(Helper.getLocalDateFromUser("Published Year"));
         book.setAvailable_copies(Helper.getIntFromUser("Number Of Available Copies"));
         bookRepository.create(book);
         System.out.println("Book with id: " + book.getId() + " added successfully");
@@ -66,11 +76,4 @@ public class BookActions {
     }
 
 
-    public List<Book> getBookList() {
-        return bookList;
-    }
-
-    public void setBookList(List<Book> bookList) {
-        this.bookList = bookList;
-    }
 }

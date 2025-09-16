@@ -2,23 +2,25 @@ package Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @Entity
 @Table(name = "genre")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Genre {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
     private String name;
 
-    @Column(name = "description")
     private String description;
+
+    @ManyToMany(mappedBy = "genres")
+    private List<Book> books;
 }

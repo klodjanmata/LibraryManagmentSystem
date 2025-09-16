@@ -24,7 +24,7 @@ public class AuthorActions {
         System.out.println("Add the necessary author information");
         Author author = new Author();
         author.setName(Helper.getStringFromUser("Name"));
-        author.setNationaity(Helper.getStringFromUser("Nationality"));
+        author.setNationality(Helper.getStringFromUser("Nationality"));
         author.setBirthDate(Helper.getLocalDateFromUser("BirthDate"));
         authorRepository.create(author);
         System.out.println("Author with id: " + author.getId() + " added successfully");

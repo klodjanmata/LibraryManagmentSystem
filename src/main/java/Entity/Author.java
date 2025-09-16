@@ -2,27 +2,29 @@ package Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.time.LocalDate;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @Entity
 @Table(name = "author")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Author {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "name")
+    @Column(nullable = false)
     private String name;
 
-    @Column(name = "nationality")
-    private String nationaity;
+    private String nationality;
 
-    @Column(name = "birthDate")
     private LocalDate birthDate;
+
+    @ManyToMany(mappedBy = "authors")
+    private List<Book> books;
 }

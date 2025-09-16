@@ -2,35 +2,45 @@ package Entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
+import java.time.LocalDate;
 import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Getter
-@Setter
-@ToString
 @Entity
 @Table(name = "book")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
 public class Book {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title")
+    @Column(nullable = false)
     private String title;
 
-    @OneToMany
-    private List<Author> authors;
+    private String genre;
 
-    @OneToMany
-    private List<Genre> genres;
+    private LocalDate published_year;
 
-    @Column(name = "published_year")
-    private int published_year;
-
-    @Column(name = "available_copies")
     private int available_copies;
 
+    @ManyToMany
+    @JoinTable(
+            name = "book_author",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "author_id")
+    )
+    private List<Author> authors;
+
+    @ManyToMany
+    @JoinTable(
+            name = "book_genre",
+            joinColumns = @JoinColumn(name = "book_id"),
+            inverseJoinColumns = @JoinColumn(name = "genre_id")
+    )
+    private List<Genre> genres;
 
 }

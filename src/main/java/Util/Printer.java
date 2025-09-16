@@ -14,7 +14,7 @@ public class Printer {
                         book.getId() + "\t" +
                                 book.getTitle() + "\t" +
                                 book.getAuthors() + "\t" +
-                                book.getGenres() + "\t"+
+                                book.getGenre() + "\t"+
                                 book.getPublished_year()
                 );
             }
@@ -26,7 +26,7 @@ public class Printer {
             System.out.println(
                     author.getId() + "\t" +
                             author.getName() + "\t" +
-                            author.getNationaity() + "\t" +
+                            author.getNationality() + "\t" +
                             author.getBirthDate()
             );
         }
