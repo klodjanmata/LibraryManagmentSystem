@@ -4,19 +4,6 @@ import Util.HibernateUtil;
 
 public class Application {
 
-    private AuthorActions authorActions;
-    private BookActions bookActions;
-    private MemberActions memberActions;
-    private GenreActions genreActions;
-    private BorrowRecordActions borrowRecordActions;
-
-    private AuthorRepository authorRepository;
-    private BookRepository bookRepository;
-    private MemberRepository memberRepository;
-    private GenreRepository genreRepository;
-    private BorrowrecordRepository borrowrecordRepository;
-
-
     public static void main(String[] args) {
         while (true){
             Menu.Menu();
@@ -25,10 +12,6 @@ public class Application {
             }
         }
     }
-
-
-
-
 
     private static boolean manageAction(int choice) {
         switch (choice) {

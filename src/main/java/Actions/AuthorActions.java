@@ -16,9 +16,11 @@ public class AuthorActions {
         authorList = new ArrayList<>();
     }
 
-    private AuthorActions(ArrayList<Author> authorList) {
-        this.authorList = authorList;
+    public AuthorActions(AuthorRepository authorRepository) {
+        this.authorRepository = authorRepository;
+        this.authorList = new ArrayList<>();
     }
+
 
     public void addAuthor() {
         System.out.println("Add the necessary author information");

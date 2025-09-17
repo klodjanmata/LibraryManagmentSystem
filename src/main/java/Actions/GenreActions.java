@@ -16,7 +16,7 @@ public class GenreActions {
             genreList = new ArrayList<>();
         }
 
-        private GenreActions(ArrayList<Genre> genreList) {
+        public GenreActions(ArrayList<Genre> genreList) {
             this.genreList = genreList;
         }
 

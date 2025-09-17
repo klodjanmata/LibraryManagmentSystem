@@ -24,16 +24,16 @@ public class BookActions {
     private GenreRepository genreRepository;
 
 
+    public BookActions(BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+        this.bookList = new ArrayList<>();
+    }
 
-    public BookActions() {
+    public BookActions(BookRepository bookRepository, AuthorRepository authorRepository, GenreRepository genreRepository, List<Book> bookList) {
         this.bookRepository = bookRepository;
         this.authorRepository = authorRepository;
         this.genreRepository = genreRepository;
         this.bookList = new ArrayList<>();
-    }
-
-    public BookActions(ArrayList<Book> bookList) {
-        this.bookList = bookList;
     }
 
     private List<Author> buildAuthors(String input){
@@ -74,6 +74,5 @@ public class BookActions {
         System.out.println("Book with id: " + book.getId() + " added successfully");
         bookList.add(book);
     }
-
 
 }
