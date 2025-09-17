@@ -38,6 +38,6 @@ public class MemberActions {
         member.setName(Helper.getStringFromUser("Name"));
         member.setEmail(Helper.getStringFromUser("Email"));
         member.setPhone(Helper.getStringFromUser("Phone"));
-        member.setMembership_date(Helper.getLocalDateFromUser("Date"))
+        member.setMembership_date(Helper.getLocalDateFromUser("Date"));
     }
 }

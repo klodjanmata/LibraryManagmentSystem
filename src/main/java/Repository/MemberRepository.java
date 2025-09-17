@@ -1,5 +1,6 @@
 package Repository;
 
+import Entity.Member;
 import Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -7,58 +8,57 @@ import org.hibernate.Transaction;
 import java.util.List;
 
 public class MemberRepository {
-    public class MemberRepositoryRepository {
 
-        public MemberRepository create(MemberRepository memberRepository){
+        public Member create(Member member){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.persist(memberRepository);
+                session.persist(member);
                 transaction.commit();
-                return memberRepository;
+                return member;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return memberRepository;
+            return member;
         }
 
-        public MemberRepository read(Long id) {
+        public Member read(Long id) {
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                return session.get(MemberRepository.class,id);
+                return session.get(Member.class,id);
             }
         }
 
-        public MemberRepository update(MemberRepository memberRepository){
+        public Member update(Member member){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.merge(memberRepository);
+                session.merge(member);
                 transaction.commit();
-                return memberRepository;
+                return member;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return memberRepository;
+            return member;
         }
 
-        public MemberRepository delete(MemberRepository memberRepository){
+        public Member delete(Member member){
             try(Session session = HibernateUtil.getSessionFactory().openSession()){
                 Transaction transaction = session.beginTransaction();
-                session.remove(memberRepository);
+                session.remove(member);
                 transaction.commit();
-                return memberRepository;
+                return member;
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            return memberRepository;
+            return member;
         }
 
-        public List<MemberRepository> findAll() {
+        public List<Member> findAll() {
             Transaction transaction = null;
-            List<MemberRepository> memberRepositorys = null;
+            List<Member> member = null;
 
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 transaction = session.beginTransaction();
 
-                memberRepositorys = session.createQuery("from MemberRepository", MemberRepository.class).list();
+                member = session.createQuery("from MemberRepository", Member.class).list();
 
                 transaction.commit();
             } catch (Exception e) {
@@ -68,8 +68,6 @@ public class MemberRepository {
                 e.printStackTrace();
             }
 
-            return memberRepositorys;
+            return member;
         }
     }
-
-}
