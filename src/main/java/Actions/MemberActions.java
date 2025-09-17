@@ -36,8 +36,8 @@ public class MemberActions {
         System.out.println("Add the necessary member information");
         Member member = new Member();
         member.setName(Helper.getStringFromUser("Name"));
-        member.getEmail(Helper.getStringFromUser("Email"));
-        member.
+        member.setEmail(Helper.getStringFromUser("Email"));
+        member.setPhone(Helper.getStringFromUser("Phone"));
+        member.setMembership_date(Helper.getLocalDateFromUser("Date"))
     }
-
 }
