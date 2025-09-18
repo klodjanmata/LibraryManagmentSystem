@@ -3,6 +3,7 @@ package Actions;
 import Entity.Book;
 import Entity.BorrowRecord;
 import Entity.Member;
+import Repository.AuthorRepository;
 import Repository.BookRepository;
 import Repository.BorrowrecordRepository;
 import Repository.MemberRepository;
@@ -30,6 +31,12 @@ public class BorrowRecordActions {
         this.bookRepository = bookRepository;
         this.memberRepository = memberRepository;
     }
+
+    public BorrowRecordActions(BorrowrecordRepository borrowrecordRepository) {
+        this.borrowrecordRepository = borrowrecordRepository;
+        this.borrowRecordList = new ArrayList<>();
+    }
+
 
     private Book buildBooks(String input) {
         Long id = Long.valueOf(input.trim());

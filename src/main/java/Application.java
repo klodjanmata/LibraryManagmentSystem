@@ -1,59 +1,95 @@
 import Actions.*;
 import Repository.*;
+import Util.Helper;
 import Util.HibernateUtil;
+import Util.Printer;
+
+import java.util.ArrayList;
 
 public class Application {
 
+    private AuthorActions authorActions;
+    private BookActions bookActions;
+    private MemberActions memberActions;
+    private GenreActions genreActions;
+    private BorrowRecordActions borrowRecordActions;
+
+    private AuthorRepository authorRepository;
+    private BookRepository bookRepository;
+    private MemberRepository memberRepository;
+    private GenreRepository genreRepository;
+    private BorrowrecordRepository borrowrecordRepository;
+
+    public Application(){
+
+        authorRepository = new AuthorRepository();
+        bookRepository = new BookRepository();
+        memberRepository = new MemberRepository();
+        genreRepository = new GenreRepository();
+        borrowrecordRepository = new BorrowrecordRepository();
+
+
+        authorActions = new AuthorActions(authorRepository);
+        bookActions = new BookActions(bookRepository, authorRepository, genreRepository, new ArrayList<>());
+        memberActions = new MemberActions(memberRepository);
+        genreActions = new GenreActions(genreRepository);
+        borrowRecordActions = new BorrowRecordActions(borrowrecordRepository);
+
+    }
+
     public static void main(String[] args) {
+        Application app = new Application();
+
         while (true){
             Menu.Menu();
-            if (manageAction(getChoice())){
-                return;
+            int choice = Helper.getIntFromUser("Number");
+            if (app.manageAction(choice)){
+                break;
             }
         }
     }
 
-    private static boolean manageAction(int choice) {
+    private boolean manageAction(int choice) {
         switch (choice) {
             case 1:
-                applicationManager.addAuthor();
+                authorActions.addAuthor();
                 break;
             case 2:
-                applicationManager.printAllAuthors();
+                Printer.printAuthors(authorRepository.findAll());
                 break;
             case 3:
-                applicationManager.addBook();
+                bookActions.addBook();
                 break;
             case 4:
-                applicationManager.printAllBooks();
+                Printer.printBooks(bookRepository.findAll());
                 break;
             case 5:
-                applicationManager.addBorrowRecord();
+                genreActions.addGenre();
                 break;
             case 6:
-                applicationManager.printAllBorrowRecords();
+                Printer.printGenres(genreRepository.findAll());
                 break;
             case 7:
-                applicationManager.addGenre();
+                memberActions.addMember();
                 break;
             case 8:
-                applicationManager.printAllGenres();
+                Printer.printMembers(memberRepository.findAll());
                 break;
             case 9:
-                applicationManager.addMember();
+                borrowRecordActions.addBorrowRecord();
                 break;
             case 10:
-                applicationManager.printAllMembers();
+                Printer.printBorrowRecords(borrowrecordRepository.findAll());
                 break;
 
-            case 11:
-                Menu.filterMenu();
-                int filterChoice = getChoice();
-                applicationManager.handleFilterSelection(filterChoice);
-                break;
+//            case 11:
+//                Menu.filterMenu();
+//                int filterChoice = Helper.getIntFromUser("Number");
+//                applicationManager.handleFilterSelection(filterChoice);
+//                break;
             case 0:
                 System.out.println("Shut down");
-                applicationManager.shutDown();
+                shutDown();
                 return true;
             default:
                 System.out.println("Invalid choice!!!");

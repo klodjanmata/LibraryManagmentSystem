@@ -15,32 +15,22 @@ import java.util.List;
 public class Book {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "Title")
     private String title;
 
-    private String genre;
-
+    @Column(name = "published_year")
     private LocalDate published_year;
 
+    @Column(name = "available_copies")
     private int available_copies;
 
-    @ManyToMany
-    @JoinTable(
-            name = "book_author",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "author_id")
-    )
+    @OneToMany
     private List<Author> authors;
 
-    @ManyToMany
-    @JoinTable(
-            name = "book_genre",
-            joinColumns = @JoinColumn(name = "book_id"),
-            inverseJoinColumns = @JoinColumn(name = "genre_id")
-    )
+    @OneToMany
     private List<Genre> genres;
 
 }

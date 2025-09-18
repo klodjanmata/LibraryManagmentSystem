@@ -36,7 +36,7 @@ public class BookActions {
         this.bookList = new ArrayList<>();
     }
 
-    private List<Author> buildAuthors(String input){
+    public List<Author> buildAuthors(String input){
         String[] ids = input.split(",");
         List<Author> authors = new ArrayList<>();
         for (String i : ids){
@@ -46,7 +46,7 @@ public class BookActions {
         return authors;
     }
 
-    private List<Genre> buildGenre(String input){
+    public List<Genre> buildGenre(String input){
         String[] ids = input.split(",");
         List<Genre> genres = new ArrayList<>();
         for (String i : ids){
@@ -67,7 +67,7 @@ public class BookActions {
         Printer.printGenres(genreRepository.findAll());
         String genreInput = Helper.getStringFromUser("Put in auth ids " +
                 "separated by ',' (1, 2, 3,)");
-        book.setGenre(buildGenre(genreInput).toString());
+        book.setGenres(buildGenre(genreInput));
         book.setPublished_year(Helper.getLocalDateFromUser("Published Year"));
         book.setAvailable_copies(Helper.getIntFromUser("Number Of Available Copies"));
         bookRepository.create(book);

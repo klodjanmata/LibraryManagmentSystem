@@ -15,16 +15,16 @@ import java.util.List;
 public class Author {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
+    @Column(name = "name")
     private String name;
 
+    @Column(name = "Nationality")
     private String nationality;
 
+    @Column(name = "Birthdate")
     private LocalDate birthDate;
 
-    @ManyToMany(mappedBy = "authors")
-    private List<Book> books;
 }

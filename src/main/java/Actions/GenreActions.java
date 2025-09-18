@@ -20,11 +20,16 @@ public class GenreActions {
             this.genreList = genreList;
         }
 
-        public void addAuthor() {
+    public GenreActions(GenreRepository genreRepository) {
+        this.genreRepository = genreRepository;
+        this.genreList = new ArrayList<>();
+    }
+
+    public void addGenre() {
             System.out.println("Add the necessary genre information");
             Genre genre = new Genre();
             genre.setName(Helper.getStringFromUser("Name"));
-            genre.setDescription(Helper.getStringFromUser("Nationality"));
+            genre.setDescription(Helper.getStringFromUser("Description"));
             genreRepository.create(genre);
             System.out.println("Genre with id: " + genre.getId() + " added successfully");
             genreList.add(genre);
