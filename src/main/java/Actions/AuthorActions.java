@@ -3,6 +3,8 @@ package Actions;
 import Entity.Author;
 import Repository.AuthorRepository;
 import Util.Helper;
+import Util.HibernateUtil;
+import org.hibernate.Session;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,13 @@ public class AuthorActions {
         return authorList;
     }
 
-    public void setAuthorList(List<Author> authorList) {
-        this.authorList = authorList;
+    public List<Author> findByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Author a WHERE lower(a.name) LIKE :name", Author.class)
+                    .setParameter("name", "%" + name.toLowerCase() + "%")
+                    .list();
+        }
     }
-}
+    }
+

@@ -23,11 +23,11 @@ public class GenreRepository {
         }
     }
 
-    public Genre findByName(String name) {
+    public List<Genre> findByName(String name) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.createQuery("FROM Genre g WHERE g.name = :name", Genre.class)
                     .setParameter("name", name)
-                    .uniqueResult();
+                    .list();
         } catch (Exception e) {
             e.printStackTrace();
             return null;

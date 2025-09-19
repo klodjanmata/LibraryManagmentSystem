@@ -3,12 +3,16 @@ package Actions;
 import Entity.Member;
 import Repository.MemberRepository;
 import Util.Helper;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MemberActions {
 
+    @Setter
+    @Getter
     private List<Member> memberList;
     private MemberRepository memberRepository;
 
@@ -22,14 +26,6 @@ public class MemberActions {
 
     public MemberActions(){
         memberList = new ArrayList<>();
-    }
-
-    public List<Member> getMemberList() {
-        return memberList;
-    }
-
-    public void setMemberList(List<Member> memberList) {
-        this.memberList = memberList;
     }
 
     public void addMember(){

@@ -11,6 +11,7 @@ import Util.Printer;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class BookActions {
 
@@ -46,7 +47,7 @@ public class BookActions {
         String[] names = input.split(",");
         List<Genre> genres = new ArrayList<>();
         for (String name : names) {
-            Genre genre = genreRepository.findByName(name.trim());
+            Genre genre = (Genre) genreRepository.findByName(name.trim());
             if (genre != null) {
                 genres.add(genre);
             } else {
@@ -99,4 +100,23 @@ public class BookActions {
             }
         }
     }
+
+    public List<Book> filterBooks(String title, String genreName) {
+        List<Book> allBooks = bookRepository.findAll();
+        return allBooks.stream()
+                .filter(b -> (title.isEmpty() || b.getTitle().toLowerCase().contains(title.toLowerCase())))
+                .filter(b -> (genreName.isEmpty() || b.getGenres().stream()
+                        .anyMatch(g -> g.getName().equalsIgnoreCase(genreName))))
+                .collect(Collectors.toList());
+    }
+
+    public List<Book> findByTitle(String bookTitle) {
+        if (bookTitle == null || bookTitle.isEmpty()) {
+            return bookRepository.findAll();
+        }
+        return bookRepository.findAll().stream()
+                .filter(b -> b.getTitle().equalsIgnoreCase(bookTitle))
+                .collect(Collectors.toList());
+    }
 }
+

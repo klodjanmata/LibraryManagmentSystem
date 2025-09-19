@@ -20,7 +20,7 @@ public class Application {
     private GenreRepository genreRepository;
     private BorrowrecordRepository borrowrecordRepository;
 
-    public Application(){
+    public Application() {
 
         authorRepository = new AuthorRepository();
         bookRepository = new BookRepository();
@@ -40,10 +40,10 @@ public class Application {
     public static void main(String[] args) {
         Application app = new Application();
 
-        while (true){
+        while (true) {
             Menu.Menu();
             int choice = Helper.getIntFromUser("Number");
-            if (app.manageAction(choice)){
+            if (app.manageAction(choice)) {
                 break;
             }
         }
@@ -81,12 +81,9 @@ public class Application {
             case 10:
                 Printer.printBorrowRecords(borrowrecordRepository.findAll());
                 break;
-
-//            case 11:
-//                Menu.filterMenu();
-//                int filterChoice = Helper.getIntFromUser("Number");
-//                applicationManager.handleFilterSelection(filterChoice);
-//                break;
+            case 11:
+                Menu.filterMenu(bookActions, authorActions, genreRepository);
+                break;
             case 0:
                 System.out.println("Shut down");
                 shutDown();
@@ -100,33 +97,9 @@ public class Application {
     private void shutDown() {
         HibernateUtil.shutdown();
     }
-
-    private void handleFilterSelection(int filterChoice) {
-    }
-
-    private void printAllMembers() {
-    }
-
-    private void addMember() {
-
-    }
-
-    private void printAllGenres() {
-    }
-
-    private void addGenre() {
-    }
-
-    private void printAllBooks() {
-    }
-
-    private void printAllBorrowRecords() {
-    }
-
-    private void addBorrowRecord() {
-    }
-
 }
+
+
 
 
 

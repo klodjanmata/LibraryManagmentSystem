@@ -3,12 +3,16 @@ package Actions;
 import Entity.Genre;
 import Repository.GenreRepository;
 import Util.Helper;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenreActions {
 
+        @Setter
+        @Getter
         private List<Genre> genreList;
         private GenreRepository genreRepository;
 
@@ -35,12 +39,5 @@ public class GenreActions {
             genreList.add(genre);
         }
 
-        public List<Genre> getGenreList() {
-            return genreList;
-        }
-
-    public void setGenreList(List<Genre> genreList) {
-        this.genreList = genreList;
-    }
 }
 
