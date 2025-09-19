@@ -63,44 +63,29 @@ public class BookActions {
         Book book = new Book();
         book.setTitle(Helper.getStringFromUser("Title"));
 
-
         Printer.printAuthors(authorRepository.findAll());
         String authorInput = Helper.getStringFromUser("Put in author IDs separated by ',' (e.g., 1,2,3)");
         book.setAuthors(buildAuthors(authorInput));
 
-
         Printer.printGenres(genreRepository.findAll());
-        String genreInput = Helper.getStringFromUser(
-                "Put in genre NAMES separated by ',' (e.g., novel, drama, thriller)"
-        );
+        String genreInput = Helper.getStringFromUser("Put in genre NAMES separated by ',' (e.g., novel, drama, thriller)");
         book.setGenres(buildGenres(genreInput));
 
+        book.setPublishedYear(Helper.getIntFromUser("Published Year"));
 
-        book.setPublishedYear(Helper.getLocalDateFromUser("Published Year"));
-        book.setAvailableCopies(Helper.getIntFromUser("Number of Available Copies"));
+        int copies;
+        do {
+            copies = Helper.getIntFromUser("Number of Available Copies");
+            if (copies < 0) System.out.println("Number of copies cannot be negative.");
+        } while (copies < 0);
+
+        book.setAvailableCopies(copies);
 
         bookRepository.create(book);
         System.out.println("Book with ID: " + book.getId() + " added successfully");
         bookList.add(book);
     }
 
-
-    public void printAllBooks() {
-        List<Book> books = bookRepository.findAll();
-        if (books.isEmpty()) {
-            System.out.println("No books found.");
-        } else {
-            System.out.println("List of Books:");
-            for (Book book : books) {
-                System.out.println("ID: " + book.getId() +
-                        ", Title: " + book.getTitle() +
-                        ", Published Year: " + book.getPublishedYear() +
-                        ", Available Copies: " + book.getAvailableCopies() +
-                        ", Authors: " + book.getAuthors() +
-                        ", Genres: " + book.getGenres());
-            }
-        }
-    }
 
     public List<Book> filterBooks(String title, String genreName) {
         List<Book> allBooks = bookRepository.findAll();

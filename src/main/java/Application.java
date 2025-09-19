@@ -32,13 +32,13 @@ public class Application {
         bookActions = new BookActions(bookRepository, authorRepository, genreRepository, new ArrayList<>());
         memberActions = new MemberActions(memberRepository);
         genreActions = new GenreActions(genreRepository);
-        borrowRecordActions = new BorrowRecordActions(borrowRecordRepository);
+        borrowRecordActions = new BorrowRecordActions();
     }
 
     public static void main(String[] args) {
         Application app = new Application();
         while (true) {
-            Menu.Menu();
+            Menu.showMainMenu();
             int choice = Helper.getIntFromUser("Number: ");
             if (app.manageAction(choice)) {
                 break;
@@ -82,7 +82,7 @@ public class Application {
                 Printer.printBorrowRecords(borrowRecordRepository.findAll());
                 break;
             case 12:
-                Menu.filterMenu(bookActions, authorActions, genreRepository);
+                Menu.showFilterMenu(bookActions, authorActions, genreRepository);
                 break;
             case 0:
                 System.out.println("System Shut Down");

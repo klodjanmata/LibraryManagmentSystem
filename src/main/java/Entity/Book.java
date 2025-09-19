@@ -38,8 +38,10 @@ public class Book {
     private List<Genre> genres;
 
     @Column(name = "published_year")
-    private LocalDate publishedYear;
+    private int publishedYear;
 
-    @Column(name = "available_copies")
-    private int availableCopies;
+
+    @Column(name = "available_copies", nullable = false)
+    private int availableCopies = 0;
+
 }

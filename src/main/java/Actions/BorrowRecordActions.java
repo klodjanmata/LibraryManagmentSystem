@@ -7,17 +7,23 @@ import Repository.BookRepository;
 import Repository.BorrowrecordRepository;
 import Repository.MemberRepository;
 import Util.Helper;
+import Util.HibernateUtil;
+import org.hibernate.Hibernate;
+import org.hibernate.Session;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public class BorrowRecordActions extends BorrowrecordRepository {
+public class BorrowRecordActions {
 
-    private BorrowrecordRepository borrowRecordRepository = new BorrowrecordRepository();
-    private MemberRepository memberRepository = new MemberRepository();
-    private BookRepository bookRepository = new BookRepository();
+    private BorrowrecordRepository borrowRecordRepository;
+    private MemberRepository memberRepository;
+    private BookRepository bookRepository;
 
-    public BorrowRecordActions(BorrowrecordRepository borrowrecordRepository) {
+    public BorrowRecordActions() {
+        this.borrowRecordRepository = new BorrowrecordRepository();
+        this.memberRepository = new MemberRepository();
+        this.bookRepository = new BookRepository();
     }
 
     public void addBorrowRecord() {
@@ -56,10 +62,22 @@ public class BorrowRecordActions extends BorrowrecordRepository {
         System.out.println("Borrow record created successfully.");
     }
 
+    public BorrowRecord findById(Long id) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            BorrowRecord record = session.get(BorrowRecord.class, id);
+            if (record != null) {
+                Hibernate.initialize(record.getBook());
+                Hibernate.initialize(record.getMember());
+            }
+            return record;
+        }
+    }
+
     public void returnBook() {
         System.out.println("Enter Borrow Record ID:");
         Long recordId = Helper.readLong();
-        BorrowRecord record = borrowRecordRepository.findById(recordId);
+        BorrowRecord record = findById(recordId);  // use our safe findById
+
         if (record == null) {
             System.out.println("Borrow record not found!");
             return;
@@ -74,7 +92,7 @@ public class BorrowRecordActions extends BorrowrecordRepository {
 
         long daysBorrowed = java.time.temporal.ChronoUnit.DAYS.between(record.getBorrowDate(), record.getReturnDate());
         if (daysBorrowed > 14) {
-            record.setPenalty((daysBorrowed - 14) * 1.0);
+            record.setPenalty((daysBorrowed - 14) * 100.);
         }
 
         borrowRecordRepository.update(record);

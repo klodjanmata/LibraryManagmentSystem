@@ -6,50 +6,45 @@ import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 public class BorrowrecordRepository {
 
     public void save(BorrowRecord record) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.persist(record);
-            transaction.commit();
-        } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
-            e.printStackTrace();
-        }
+        executeTransaction(session -> session.persist(record));
     }
 
-    public static List<BorrowRecord> findAll() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM BorrowRecord", BorrowRecord.class).list();
-        }
+    public void update(BorrowRecord record) {
+        executeTransaction(session -> session.merge(record));
+    }
+
+    public void delete(BorrowRecord record) {
+        executeTransaction(session -> session.remove(record));
     }
 
     public BorrowRecord findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             return session.get(BorrowRecord.class, id);
-        }
-    }
-
-    public void update(BorrowRecord record) {
-        Transaction transaction = null;
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            session.merge(record);
-            transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) transaction.rollback();
             e.printStackTrace();
+            return null;
         }
     }
 
-    public void delete(BorrowRecord record) {
+    public List<BorrowRecord> findAll() {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM BorrowRecord", BorrowRecord.class).list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
+    private void executeTransaction(Consumer<Session> action) {
         Transaction transaction = null;
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-            session.remove(record);
+            action.accept(session);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
