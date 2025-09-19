@@ -33,16 +33,6 @@ public class Helper {
         return sc.nextFloat();
     }
 
-//    public static char getCharFromUser(String message){
-//        System.out.print(message + ": ");
-//        Scanner sc = new Scanner(System.in);
-//        String input = sc.nextLine().trim();
-//        while (input.isEmpty()) {
-//            System.out.print("Invalid input. Please enter at least one character: ");
-//            input = sc.nextLine().trim();
-//        }
-//        return input.charAt(0);
-//    }
 
     public static String convertListToString(List<String> values) {
         String result = "[";
