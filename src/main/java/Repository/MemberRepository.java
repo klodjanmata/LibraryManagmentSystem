@@ -21,6 +21,22 @@ public class MemberRepository {
             return member;
         }
 
+    public Member saveMember(Member member) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
+            session.persist(member);
+            transaction.commit();
+            return member;
+        } catch (Exception e) {
+            if (transaction != null && transaction.getStatus().canRollback()) {
+                transaction.rollback();
+            }
+            e.printStackTrace();
+        }
+        return null;
+    }
+
         public Member read(Long id) {
             try (Session session = HibernateUtil.getSessionFactory().openSession()) {
                 return session.get(Member.class,id);
@@ -51,23 +67,24 @@ public class MemberRepository {
             return member;
         }
 
-        public List<Member> findAll() {
-            Transaction transaction = null;
-            List<Member> member = null;
+    public List<Member> findAll() {
+        Transaction transaction = null;
+        List<Member> members = null;
 
-            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-                transaction = session.beginTransaction();
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
 
-                member = session.createQuery("from MemberRepository", Member.class).list();
+            members = session.createQuery("from Member", Member.class).list();
 
-                transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) {
-                    transaction.rollback();
-                }
-                e.printStackTrace();
+            transaction.commit();  // commit before closing session
+        } catch (Exception e) {
+            if (transaction != null && transaction.getStatus().canRollback()) {
+                transaction.rollback();
             }
-
-            return member;
+            e.printStackTrace();
         }
+
+        return members;
     }
+
+}

@@ -31,7 +31,6 @@ public class BookActions {
         this.bookList = bookList != null ? bookList : new ArrayList<>();
     }
 
-    // Build authors list from comma-separated IDs
     private List<Author> buildAuthors(String input) {
         String[] ids = input.split(",");
         List<Author> authors = new ArrayList<>();
@@ -43,19 +42,19 @@ public class BookActions {
         return authors;
     }
 
-    // Build genres list from comma-separated IDs
     private List<Genre> buildGenres(String input) {
-        String[] ids = input.split(",");
+        String[] names = input.split(",");
         List<Genre> genres = new ArrayList<>();
-        for (String i : ids) {
-            Long id = Long.valueOf(i.trim());
-            Genre genre = genreRepository.read(id);
-            if (genre != null) genres.add(genre);
+        for (String name : names) {
+            Genre genre = genreRepository.findByName(name.trim());
+            if (genre != null) {
+                genres.add(genre);
+            } else {
+                System.out.println("Genre not found: " + name.trim());
+            }
         }
         return genres;
     }
-
-    // Add a new book
     public void addBook() {
         System.out.println("Add the necessary book information");
 
@@ -69,7 +68,9 @@ public class BookActions {
 
 
         Printer.printGenres(genreRepository.findAll());
-        String genreInput = Helper.getStringFromUser("Put in genre IDs separated by ',' (e.g., 1,2,3)");
+        String genreInput = Helper.getStringFromUser(
+                "Put in genre NAMES separated by ',' (e.g., novel, drama, thriller)"
+        );
         book.setGenres(buildGenres(genreInput));
 
 

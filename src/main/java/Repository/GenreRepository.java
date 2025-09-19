@@ -1,6 +1,5 @@
 package Repository;
 
-import Entity.BorrowRecord;
 import Entity.Genre;
 import Util.HibernateUtil;
 import org.hibernate.Session;
@@ -10,46 +9,66 @@ import java.util.List;
 
 public class GenreRepository {
 
-    public Genre create(Genre genre){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
-            Transaction transaction = session.beginTransaction();
+    public Genre create(Genre genre) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             session.persist(genre);
             transaction.commit();
             return genre;
         } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
+            return null;
         }
-        return genre;
+    }
+
+    public Genre findByName(String name) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery("FROM Genre g WHERE g.name = :name", Genre.class)
+                    .setParameter("name", name)
+                    .uniqueResult();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public Genre read(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(Genre.class,id);
+            return session.get(Genre.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
         }
     }
 
-    public Genre update(Genre genre){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
-            Transaction transaction = session.beginTransaction();
+    public Genre update(Genre genre) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             session.merge(genre);
             transaction.commit();
             return genre;
         } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
+            return null;
         }
-        return genre;
     }
 
-    public Genre delete(Genre genre){
-        try(Session session = HibernateUtil.getSessionFactory().openSession()){
-            Transaction transaction = session.beginTransaction();
+    public boolean delete(Genre genre) {
+        Transaction transaction = null;
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            transaction = session.beginTransaction();
             session.remove(genre);
             transaction.commit();
-            return genre;
+            return true;
         } catch (Exception e) {
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
+            return false;
         }
-        return genre;
     }
 
     public List<Genre> findAll() {
@@ -58,18 +77,13 @@ public class GenreRepository {
 
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             transaction = session.beginTransaction();
-
-            genres = session.createQuery("from Genre", Genre.class).list();
-
+            genres = session.createQuery("FROM Genre", Genre.class).list();
             transaction.commit();
         } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
+            if (transaction != null) transaction.rollback();
             e.printStackTrace();
         }
 
         return genres;
     }
-
 }

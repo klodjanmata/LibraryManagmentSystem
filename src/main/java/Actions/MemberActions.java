@@ -39,5 +39,8 @@ public class MemberActions {
         member.setEmail(Helper.getStringFromUser("Email"));
         member.setPhone(Helper.getStringFromUser("Phone"));
         member.setMembership_date(Helper.getLocalDateFromUser("Date"));
+
+        memberRepository.saveMember(member);  // <-- Save to DB
+        System.out.println("Member with ID: " + member.getId() + " added successfully");
     }
 }
