@@ -48,7 +48,6 @@ public class BookRepository {
         }
     }
 
-    // Delete a Book
     public Book delete(Book book) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
             Transaction transaction = session.beginTransaction();

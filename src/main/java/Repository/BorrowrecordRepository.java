@@ -2,6 +2,7 @@ package Repository;
 
 import Entity.BorrowRecord;
 import Util.HibernateUtil;
+import org.hibernate.Hibernate;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
@@ -24,7 +25,14 @@ public class BorrowrecordRepository {
 
     public BorrowRecord findById(Long id) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.get(BorrowRecord.class, id);
+            BorrowRecord record = session.get(BorrowRecord.class, id);
+            if (record != null) {
+                Hibernate.initialize(record.getBook());
+                Hibernate.initialize(record.getBook().getAuthors());
+                Hibernate.initialize(record.getBook().getGenres());
+                Hibernate.initialize(record.getMember());
+            }
+            return record;
         } catch (Exception e) {
             e.printStackTrace();
             return null;
@@ -33,7 +41,15 @@ public class BorrowrecordRepository {
 
     public List<BorrowRecord> findAll() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM BorrowRecord", BorrowRecord.class).list();
+            List<BorrowRecord> records = session.createQuery("FROM BorrowRecord", BorrowRecord.class).list();
+
+            for (BorrowRecord record : records) {
+                Hibernate.initialize(record.getBook());
+                Hibernate.initialize(record.getBook().getAuthors());
+                Hibernate.initialize(record.getBook().getGenres());
+                Hibernate.initialize(record.getMember());
+            }
+            return records;
         } catch (Exception e) {
             e.printStackTrace();
             return List.of();
