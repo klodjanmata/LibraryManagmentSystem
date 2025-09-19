@@ -3,70 +3,95 @@ package Actions;
 import Entity.Book;
 import Entity.BorrowRecord;
 import Entity.Member;
-import Repository.AuthorRepository;
 import Repository.BookRepository;
 import Repository.BorrowrecordRepository;
 import Repository.MemberRepository;
 import Util.Helper;
-import Util.Printer;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
-public class BorrowRecordActions {
+public class BorrowRecordActions extends BorrowrecordRepository {
 
-    private List<BorrowRecord> borrowRecordList;
-    private BorrowrecordRepository borrowrecordRepository;
-    private BookRepository bookRepository;
-    private MemberRepository memberRepository;
-
-    public BorrowRecordActions(List<BorrowRecord> borrowRecordList) {
-        this.borrowRecordList = borrowRecordList;
-    }
-
-    public BorrowRecordActions(List<BorrowRecord> borrowRecordList, BorrowrecordRepository borrowrecordRepository,
-                               BookRepository bookRepository, MemberRepository memberRepository) {
-        this.borrowRecordList = borrowRecordList;
-        this.borrowrecordRepository = borrowrecordRepository;
-        this.bookRepository = bookRepository;
-        this.memberRepository = memberRepository;
-    }
+    private BorrowrecordRepository borrowRecordRepository = new BorrowrecordRepository();
+    private MemberRepository memberRepository = new MemberRepository();
+    private BookRepository bookRepository = new BookRepository();
 
     public BorrowRecordActions(BorrowrecordRepository borrowrecordRepository) {
-        this.borrowrecordRepository = borrowrecordRepository;
-        this.borrowRecordList = new ArrayList<>();
     }
 
+    public void addBorrowRecord() {
+        System.out.println("Enter Member ID:");
+        Long memberId = Helper.readLong();
+        Member member = memberRepository.findById(memberId);
+        if (member == null) {
+            System.out.println("Member not found!");
+            return;
+        }
 
-    private Book buildBooks(String input) {
-        Long id = Long.valueOf(input.trim());
-        return bookRepository.read(id);
+        System.out.println("Enter Book ID:");
+        Long bookId = Helper.readLong();
+        Book book = bookRepository.findById(bookId);
+        if (book == null) {
+            System.out.println("Book not found!");
+            return;
+        }
+
+        if (book.getAvailableCopies() <= 0) {
+            System.out.println("No copies available for this book!");
+            return;
+        }
+
+        BorrowRecord record = new BorrowRecord();
+        record.setMember(member);
+        record.setBook(book);
+        record.setBorrowDate(LocalDate.now());
+        record.setPenalty(0.0);
+
+        borrowRecordRepository.save(record);
+
+        book.setAvailableCopies(book.getAvailableCopies() - 1);
+        bookRepository.update(book);
+
+        System.out.println("Borrow record created successfully.");
     }
 
-    private Member buildMember(String input) {
-        Long id = Long.valueOf(input.trim());
-        return memberRepository.read(id);
+    public void returnBook() {
+        System.out.println("Enter Borrow Record ID:");
+        Long recordId = Helper.readLong();
+        BorrowRecord record = borrowRecordRepository.findById(recordId);
+        if (record == null) {
+            System.out.println("Borrow record not found!");
+            return;
+        }
+
+        if (record.getReturnDate() != null) {
+            System.out.println("This book is already returned.");
+            return;
+        }
+
+        record.setReturnDate(LocalDate.now());
+
+        long daysBorrowed = java.time.temporal.ChronoUnit.DAYS.between(record.getBorrowDate(), record.getReturnDate());
+        if (daysBorrowed > 14) {
+            record.setPenalty((daysBorrowed - 14) * 1.0);
+        }
+
+        borrowRecordRepository.update(record);
+
+        Book book = record.getBook();
+        book.setAvailableCopies(book.getAvailableCopies() + 1);
+        bookRepository.update(book);
+
+        System.out.println("Book returned successfully. Penalty: " + record.getPenalty());
     }
 
-    public void addBorrowRecord(){
-        System.out.println("Add the necessary Borrow Record information");
-        BorrowRecord borrowRecord = new BorrowRecord();
-
-        Printer.printMembers(memberRepository.findAll());
-        String memberInput = Helper.getStringFromUser("Put member ID: ");
-        borrowRecord.setMember(buildMember(memberInput));
-
-        Printer.printBooks(bookRepository.findAll());
-        String bookInput = Helper.getStringFromUser("Put book ID: ");
-        borrowRecord.setBook(buildBooks(bookInput));
-
-        borrowRecord.setBorrow_Date(Helper.getLocalDateFromUser("Borrow Date"));
-        borrowRecord.setReturn_date(Helper.getLocalDateFromUser("Return Date"));
-        borrowRecord.setPenalty(Helper.getIntFromUser("Penalty"));
-
-        borrowrecordRepository.create(borrowRecord);
-        System.out.println("Borrow Record with id: " + borrowRecord.getId() + "added successfully");
-        borrowRecordList.add(borrowRecord);
+    public void printAllBorrowRecords() {
+        List<BorrowRecord> records = borrowRecordRepository.findAll();
+        if (records.isEmpty()) {
+            System.out.println("No borrow records found.");
+        } else {
+            records.forEach(System.out::println);
+        }
     }
-
 }

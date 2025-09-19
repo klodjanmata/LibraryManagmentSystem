@@ -87,4 +87,21 @@ public class MemberRepository {
         return members;
     }
 
-}
+        public Member findById(Long memberId) {
+            Transaction transaction = null;
+            Member member = null;
+
+            try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+                transaction = session.beginTransaction();
+                member = session.get(Member.class, memberId);
+                transaction.commit();
+            } catch (Exception e) {
+                if (transaction != null) transaction.rollback();
+                e.printStackTrace();
+            }
+
+            return member;
+        }
+    }
+
+

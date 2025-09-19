@@ -11,26 +11,30 @@ import java.time.LocalDate;
 @Setter
 @ToString
 @Entity
-@Table(name ="borrowRecord")
+@Table(name = "borrow_record")
 public class BorrowRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name = "book_id", nullable = false)
     private Book book;
 
     @Column(name = "borrow_date")
-    private LocalDate borrow_Date;
+    private LocalDate borrowDate;
 
     @Column(name = "return_date")
-    private LocalDate return_date;
+    private LocalDate returnDate;
 
     @Column(name = "penalty")
-    private int penalty;
+    private Double penalty;
 
 }
+
+

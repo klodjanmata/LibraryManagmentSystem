@@ -18,31 +18,28 @@ public class Application {
     private BookRepository bookRepository;
     private MemberRepository memberRepository;
     private GenreRepository genreRepository;
-    private BorrowrecordRepository borrowrecordRepository;
+    private BorrowrecordRepository borrowRecordRepository;
 
+    // Constructor
     public Application() {
-
         authorRepository = new AuthorRepository();
         bookRepository = new BookRepository();
         memberRepository = new MemberRepository();
         genreRepository = new GenreRepository();
-        borrowrecordRepository = new BorrowrecordRepository();
-
+        borrowRecordRepository = new BorrowrecordRepository();
 
         authorActions = new AuthorActions(authorRepository);
         bookActions = new BookActions(bookRepository, authorRepository, genreRepository, new ArrayList<>());
         memberActions = new MemberActions(memberRepository);
         genreActions = new GenreActions(genreRepository);
-        borrowRecordActions = new BorrowRecordActions(borrowrecordRepository);
-
+        borrowRecordActions = new BorrowRecordActions(borrowRecordRepository);
     }
 
     public static void main(String[] args) {
         Application app = new Application();
-
         while (true) {
             Menu.Menu();
-            int choice = Helper.getIntFromUser("Number");
+            int choice = Helper.getIntFromUser("Number: ");
             if (app.manageAction(choice)) {
                 break;
             }
@@ -79,17 +76,20 @@ public class Application {
                 borrowRecordActions.addBorrowRecord();
                 break;
             case 10:
-                Printer.printBorrowRecords(borrowrecordRepository.findAll());
+                borrowRecordActions.returnBook();
                 break;
             case 11:
+                Printer.printBorrowRecords(borrowRecordRepository.findAll());
+                break;
+            case 12:
                 Menu.filterMenu(bookActions, authorActions, genreRepository);
                 break;
             case 0:
-                System.out.println("Shut down");
+                System.out.println("System Shut Down");
                 shutDown();
                 return true;
             default:
-                System.out.println("Invalid choice!!!");
+                System.out.println("Invalid choice!");
         }
         return false;
     }
@@ -98,9 +98,3 @@ public class Application {
         HibernateUtil.shutdown();
     }
 }
-
-
-
-
-
-

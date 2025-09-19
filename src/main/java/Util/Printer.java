@@ -66,8 +66,8 @@ public class Printer {
                     borrowRecord.getId() + "\t" +
                             borrowRecord.getMember() + "\t" +
                             borrowRecord.getBook() + "\t" +
-                            borrowRecord.getBorrow_Date() + "\t" +
-                            borrowRecord.getReturn_date() + "\t" +
+                            borrowRecord.getBorrowDate() + "\t" +
+                            borrowRecord.getReturnDate() + "\t" +
                             borrowRecord.getPenalty()
             );
         }

@@ -70,4 +70,13 @@ public class BookRepository {
 
             return books;
         }
+
+    public Book findById(Long bookId) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.get(Book.class, bookId);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

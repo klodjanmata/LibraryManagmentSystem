@@ -47,15 +47,16 @@ public class BookActions {
         String[] names = input.split(",");
         List<Genre> genres = new ArrayList<>();
         for (String name : names) {
-            Genre genre = (Genre) genreRepository.findByName(name.trim());
-            if (genre != null) {
-                genres.add(genre);
+            List<Genre> foundGenres = genreRepository.findByName(name.trim());
+            if (foundGenres != null && !foundGenres.isEmpty()) {
+                genres.add(foundGenres.get(0)); // Take the first match
             } else {
                 System.out.println("Genre not found: " + name.trim());
             }
         }
         return genres;
     }
+
     public void addBook() {
         System.out.println("Add the necessary book information");
 
