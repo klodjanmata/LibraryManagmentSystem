@@ -15,7 +15,7 @@ public class Printer {
                                 book.getTitle() + "\t" +
                                 book.getAuthors() + "\t" +
                                 book.getGenres() + "\t" +
-                                book.getPublished_year()
+                                book.getPublishedYear()
                 );
             }
         }
