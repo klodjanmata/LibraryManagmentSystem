@@ -46,7 +46,7 @@ public class Application {
     private boolean manageAction(int choice) {
         switch (choice) {
             case 1:
-                String authorName = Helper.getStringFromUser("Enter author name to search (leave empty for all): ");
+                String authorName = Helper.getStringFromUser("Enter author name to search (Or press Entry for all): ");
                 if (authorName.isEmpty()) authorRepository.findAll().forEach(System.out::println);
                 else authorActions.findByName(authorName).forEach(System.out::println);
                 Menu.showAuthorMenu(authorActions);

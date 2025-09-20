@@ -9,13 +9,14 @@ import Repository.MemberRepository;
 import Util.Helper;
 
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class BorrowRecordActions {
 
-    private BorrowrecordRepository borrowRecordRepository;
-    private MemberRepository memberRepository;
-    private BookRepository bookRepository;
+    private final BorrowrecordRepository borrowRecordRepository;
+    private final MemberRepository memberRepository;
+    private final BookRepository bookRepository;
 
     public BorrowRecordActions(BorrowrecordRepository borrowRecordRepository,
                                BookRepository bookRepository,
@@ -25,9 +26,8 @@ public class BorrowRecordActions {
         this.memberRepository = memberRepository;
     }
 
-    // Add borrow record using member name and book title
     public void addBorrowRecord() {
-        String memberName = Helper.getStringFromUser("Enter Member Name: ");
+        String memberName = Helper.getStringFromUser("Enter Member Name");
         List<Member> members = memberRepository.findByName(memberName);
         if (members.isEmpty()) {
             System.out.println("No member found with name: " + memberName);
@@ -35,7 +35,7 @@ public class BorrowRecordActions {
         }
         Member member = members.get(0);
 
-        String bookTitle = Helper.getStringFromUser("Enter Book Title: ");
+        String bookTitle = Helper.getStringFromUser("Enter Book Title");
         List<Book> books = bookRepository.findByTitle(bookTitle, bookRepository);
         if (books.isEmpty()) {
             System.out.println("No book found with title: " + bookTitle);
@@ -48,10 +48,15 @@ public class BorrowRecordActions {
             return;
         }
 
+        LocalDate borrowDate = Helper.getDateFromUser("Enter Borrow Date");
+        LocalDate dueDate = Helper.getDateFromUser("Enter Due Date");
+
         BorrowRecord record = new BorrowRecord();
         record.setMember(member);
         record.setBook(book);
-        record.setBorrowDate(LocalDate.now());
+        record.setBorrowDate(borrowDate);
+        record.setDueDate(dueDate);
+        record.setReturnDate(null);
         record.setPenalty(0.0);
 
         borrowRecordRepository.save(record);
@@ -59,12 +64,11 @@ public class BorrowRecordActions {
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.update(book);
 
-        System.out.println("Borrow record created successfully for member: " + member.getName());
+        System.out.println("Borrow record created successfully!");
     }
 
-    // Return book by member name and book title
     public void returnBook() {
-        String memberName = Helper.getStringFromUser("Enter Member Name: ");
+        String memberName = Helper.getStringFromUser("Enter Member Name");
         List<Member> members = memberRepository.findByName(memberName);
         if (members.isEmpty()) {
             System.out.println("No member found with name: " + memberName);
@@ -72,7 +76,7 @@ public class BorrowRecordActions {
         }
         Member member = members.get(0);
 
-        String bookTitle = Helper.getStringFromUser("Enter Book Title: ");
+        String bookTitle = Helper.getStringFromUser("Enter Book Title");
         List<Book> books = bookRepository.findByTitle(bookTitle, bookRepository);
         if (books.isEmpty()) {
             System.out.println("No book found with title: " + bookTitle);
@@ -91,10 +95,20 @@ public class BorrowRecordActions {
             return;
         }
 
-        record.setReturnDate(LocalDate.now());
-        long daysBorrowed = java.time.temporal.ChronoUnit.DAYS.between(record.getBorrowDate(), record.getReturnDate());
-        if (daysBorrowed > 14) {
-            record.setPenalty((daysBorrowed - 14) * 100.0);
+        if (record.getDueDate() != null) {
+            System.out.println("The due date was: " + record.getDueDate().format(Helper.DATE_FORMATTER));
+        } else {
+            System.out.println("No due date was set for this borrow record.");
+        }
+
+        LocalDate returnDate = Helper.getDateFromUser("Enter Return Date");
+        record.setReturnDate(returnDate);
+
+        if (record.getDueDate() != null) {
+            long daysLate = ChronoUnit.DAYS.between(record.getDueDate(), returnDate);
+            record.setPenalty(daysLate > 0 ? daysLate * 100.0 : 0.0);
+        } else {
+            record.setPenalty(0.0);
         }
 
         borrowRecordRepository.update(record);
@@ -105,23 +119,14 @@ public class BorrowRecordActions {
         System.out.println("Book returned successfully. Penalty: " + record.getPenalty());
     }
 
-    // Print all borrow records
     public void printAllBorrowRecords() {
         List<BorrowRecord> records = borrowRecordRepository.findAll();
         if (records.isEmpty()) {
             System.out.println("No borrow records found.");
         } else {
+            System.out.println("\n--- All Borrow Records ---");
             records.forEach(System.out::println);
         }
     }
 
-    public void printBorrowRecordsByMemberName() {
-        String memberName = Helper.getStringFromUser("Enter Member Name: ");
-        List<BorrowRecord> records = borrowRecordRepository.findByMemberName(memberName);
-        if (records.isEmpty()) {
-            System.out.println("No borrow records found for member: " + memberName);
-        } else {
-            records.forEach(System.out::println);
-        }
-    }
 }

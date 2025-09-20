@@ -77,7 +77,19 @@ public class Helper {
             }
         }
     }
+
+    public static LocalDate getDateFromUser(String message) {
+        System.out.println("Expected date format: dd.MM.yyyy");
+        System.out.print(message + ": ");
+        Scanner sc = new Scanner(System.in);
+        try {
+            return LocalDate.parse(sc.nextLine(), DATE_FORMATTER);
+        } catch (Exception e) {
+            System.out.println("Invalid date! Select another day from today");
+            return LocalDate.now();
+        }
+    }
 }
-        
+
 
 

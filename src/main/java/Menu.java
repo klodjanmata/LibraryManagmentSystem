@@ -126,10 +126,10 @@ public class Menu {
 
     public static void showBorrowRecordMenu(BorrowRecordActions borrowActions, BorrowrecordRepository borrowRepo) {
         System.out.println("\n--- Borrow Record Management ---");
-        System.out.println("1. Add Borrow Record ");
+        System.out.println("1. Add Borrow Record");
         System.out.println("2. Return Book");
         System.out.println("3. Print All Borrow Records");
-        System.out.println("4. Search Borrow Records ");
+        System.out.println("4. Search Borrow Records");
         System.out.println("0. Back");
 
         int choice = Helper.getIntFromUser("Choose option: ");
@@ -153,13 +153,12 @@ public class Menu {
                 }
                 break;
             case 0:
-                System.out.println("Back to Main Menu...");
+                System.out.println("Back to Main Menu");
                 break;
             default:
                 System.out.println("Invalid choice!");
         }
     }
-
     public static void showFilterMenu(BookActions bookActions, AuthorActions authorActions, GenreRepository genreRepo) {
         System.out.println("\n--- Filter Menu ---");
         System.out.println("1. Filter by Author");
@@ -197,7 +196,7 @@ public class Menu {
                 }
                 break;
             case 0:
-                System.out.println("Back to Main Menu...");
+                System.out.println("Back to Main Menu");
                 break;
             default:
                 System.out.println("Invalid choice!");

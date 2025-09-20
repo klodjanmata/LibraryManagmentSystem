@@ -32,6 +32,9 @@ public class BorrowRecord {
     @Column(name = "return_date")
     private LocalDate returnDate;
 
+    @Column(name = "due_date")
+    private LocalDate dueDate;
+
     @Column(name = "penalty")
     private Double penalty;
 
