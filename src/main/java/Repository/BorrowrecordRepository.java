@@ -23,19 +23,24 @@ public class BorrowrecordRepository {
         executeTransaction(session -> session.remove(record));
     }
 
-    public BorrowRecord findById(Long id) {
+    public List<BorrowRecord> findByMemberName(String memberName) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            BorrowRecord record = session.get(BorrowRecord.class, id);
-            if (record != null) {
+            List<BorrowRecord> records = session.createQuery(
+                            "FROM BorrowRecord br WHERE br.member.name = :name", BorrowRecord.class)
+                    .setParameter("name", memberName)
+                    .list();
+
+            for (BorrowRecord record : records) {
                 Hibernate.initialize(record.getBook());
                 Hibernate.initialize(record.getBook().getAuthors());
                 Hibernate.initialize(record.getBook().getGenres());
                 Hibernate.initialize(record.getMember());
             }
-            return record;
+
+            return records;
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return List.of();
         }
     }
 

@@ -39,9 +39,7 @@ public class Application {
         while (true) {
             Menu.showMainMenu();
             int choice = Helper.getIntFromUser("Number: ");
-            if (app.manageAction(choice)) {
-                break;
-            }
+            if (app.manageAction(choice)) break;
         }
     }
 
@@ -49,47 +47,35 @@ public class Application {
         switch (choice) {
             case 1:
                 String authorName = Helper.getStringFromUser("Enter author name to search (leave empty for all): ");
-                if (authorName.isEmpty()) {
-                    authorRepository.findAll().forEach(System.out::println);
-                } else {
-                    authorActions.findByName(authorName).forEach(System.out::println);
-                }
+                if (authorName.isEmpty()) authorRepository.findAll().forEach(System.out::println);
+                else authorActions.findByName(authorName).forEach(System.out::println);
                 Menu.showAuthorMenu(authorActions);
                 break;
 
             case 2:
                 String bookTitle = Helper.getStringFromUser("Enter book title to search (leave empty for all): ");
-                if (bookTitle.isEmpty()) {
-                    bookRepository.findAll().forEach(System.out::println);
-                } else {
-                    bookActions.findByTitle(bookTitle).forEach(System.out::println);
-                }
+                if (bookTitle.isEmpty()) bookRepository.findAll().forEach(System.out::println);
+                else bookActions.findByTitle(bookTitle).forEach(System.out::println);
                 Menu.showBookMenu(bookActions);
                 break;
 
             case 3:
                 String genreName = Helper.getStringFromUser("Enter genre name to search (leave empty for all): ");
-                if (genreName.isEmpty()) {
-                    genreRepository.findAll().forEach(System.out::println);
-                } else {
-                    genreRepository.findByName(genreName).forEach(System.out::println);
-                }
+                if (genreName.isEmpty()) genreRepository.findAll().forEach(System.out::println);
+                else genreRepository.findByName(genreName).forEach(System.out::println);
                 Menu.showGenreMenu(genreActions, genreRepository);
                 break;
 
             case 4:
                 String memberName = Helper.getStringFromUser("Enter member name to search (leave empty for all): ");
-                if (memberName.isEmpty()) {
-                    memberRepository.findAll().forEach(System.out::println);
-                } else {
-
-                    memberActions.findByName(memberName).forEach(System.out::println);
-                }
+                if (memberName.isEmpty()) memberRepository.findAll().forEach(System.out::println);
+                else memberActions.findByName(memberName).forEach(System.out::println);
                 Menu.showMemberMenu(memberActions);
                 break;
 
             case 5:
-                Menu.showBorrowRecordMenu(borrowRecordActions);
+
+                Menu.showBorrowRecordMenu(borrowRecordActions, borrowRecordRepository);
                 break;
 
             case 6:
@@ -106,7 +92,6 @@ public class Application {
         }
         return false;
     }
-
 
     private void shutDown() {
         HibernateUtil.shutdown();

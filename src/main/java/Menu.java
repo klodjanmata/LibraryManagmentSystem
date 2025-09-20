@@ -1,8 +1,10 @@
 import Actions.*;
+import Repository.BorrowrecordRepository;
 import Repository.GenreRepository;
 import Entity.Author;
 import Entity.Book;
 import Entity.Genre;
+import Entity.BorrowRecord;
 import Util.Helper;
 
 import java.util.List;
@@ -122,17 +124,17 @@ public class Menu {
         }
     }
 
-    public static void showBorrowRecordMenu(BorrowRecordActions borrowActions) {
+    public static void showBorrowRecordMenu(BorrowRecordActions borrowActions, BorrowrecordRepository borrowRepo) {
         System.out.println("\n--- Borrow Record Management ---");
-        System.out.println("1. Add Borrow Record");
+        System.out.println("1. Add Borrow Record ");
         System.out.println("2. Return Book");
         System.out.println("3. Print All Borrow Records");
+        System.out.println("4. Search Borrow Records ");
         System.out.println("0. Back");
 
         int choice = Helper.getIntFromUser("Choose option: ");
         switch (choice) {
             case 1:
-                borrowActions.printAllBorrowRecords();
                 borrowActions.addBorrowRecord();
                 break;
             case 2:
@@ -140,6 +142,15 @@ public class Menu {
                 break;
             case 3:
                 borrowActions.printAllBorrowRecords();
+                break;
+            case 4:
+                String memberName = Helper.getStringFromUser("Enter member name: ");
+                List<BorrowRecord> records = borrowRepo.findByMemberName(memberName);
+                if (records.isEmpty()) {
+                    System.out.println("No borrow records found for this member!");
+                } else {
+                    records.forEach(System.out::println);
+                }
                 break;
             case 0:
                 System.out.println("Back to Main Menu...");

@@ -109,4 +109,17 @@ public class BookRepository {
             System.out.println("---------------------");
         }
     }
+
+    public List<Book> findByTitle(String title, BookRepository bookRepository) {
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Book b WHERE b.title = :title", Book.class)
+                    .setParameter("title", title)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+    }
+
 }

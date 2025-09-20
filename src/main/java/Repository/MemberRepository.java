@@ -93,4 +93,18 @@ public class MemberRepository {
     public Member findById(Long memberId) {
         return read(memberId);
     }
+
+    public List<Member> findByName(String memberName) {
+
+        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
+            return session.createQuery(
+                            "FROM Member m WHERE m.name = :name", Member.class)
+                    .setParameter("name", memberName)
+                    .list();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return List.of();
+        }
+
+    }
 }

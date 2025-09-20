@@ -7,9 +7,6 @@ import Repository.BookRepository;
 import Repository.BorrowrecordRepository;
 import Repository.MemberRepository;
 import Util.Helper;
-import Util.HibernateUtil;
-import org.hibernate.Hibernate;
-import org.hibernate.Session;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -28,22 +25,23 @@ public class BorrowRecordActions {
         this.memberRepository = memberRepository;
     }
 
+    // Add borrow record using member name and book title
     public void addBorrowRecord() {
-        System.out.println("Enter Member ID:");
-        Long memberId = Helper.readLong();
-        Member member = memberRepository.findById(memberId);
-        if (member == null) {
-            System.out.println("Member not found!");
+        String memberName = Helper.getStringFromUser("Enter Member Name: ");
+        List<Member> members = memberRepository.findByName(memberName);
+        if (members.isEmpty()) {
+            System.out.println("No member found with name: " + memberName);
             return;
         }
+        Member member = members.get(0);
 
-        System.out.println("Enter Book ID:");
-        Long bookId = Helper.readLong();
-        Book book = bookRepository.findById(bookId);
-        if (book == null) {
-            System.out.println("Book not found!");
+        String bookTitle = Helper.getStringFromUser("Enter Book Title: ");
+        List<Book> books = bookRepository.findByTitle(bookTitle, bookRepository);
+        if (books.isEmpty()) {
+            System.out.println("No book found with title: " + bookTitle);
             return;
         }
+        Book book = books.get(0);
 
         if (book.getAvailableCopies() <= 0) {
             System.out.println("No copies available for this book!");
@@ -61,37 +59,39 @@ public class BorrowRecordActions {
         book.setAvailableCopies(book.getAvailableCopies() - 1);
         bookRepository.update(book);
 
-        System.out.println("Borrow record created successfully.");
+        System.out.println("Borrow record created successfully for member: " + member.getName());
     }
 
-    public BorrowRecord findById(Long id) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            BorrowRecord record = session.get(BorrowRecord.class, id);
-            if (record != null) {
-                Hibernate.initialize(record.getBook());
-                Hibernate.initialize(record.getMember());
-            }
-            return record;
-        }
-    }
-
+    // Return book by member name and book title
     public void returnBook() {
-        System.out.println("Enter Borrow Record ID:");
-        Long recordId = Helper.readLong();
-        BorrowRecord record = findById(recordId);
-
-        if (record == null) {
-            System.out.println("Borrow record not found!");
+        String memberName = Helper.getStringFromUser("Enter Member Name: ");
+        List<Member> members = memberRepository.findByName(memberName);
+        if (members.isEmpty()) {
+            System.out.println("No member found with name: " + memberName);
             return;
         }
+        Member member = members.get(0);
 
-        if (record.getReturnDate() != null) {
-            System.out.println("This book is already returned.");
+        String bookTitle = Helper.getStringFromUser("Enter Book Title: ");
+        List<Book> books = bookRepository.findByTitle(bookTitle, bookRepository);
+        if (books.isEmpty()) {
+            System.out.println("No book found with title: " + bookTitle);
+            return;
+        }
+        Book book = books.get(0);
+
+        List<BorrowRecord> records = borrowRecordRepository.findByMemberName(member.getName());
+        BorrowRecord record = records.stream()
+                .filter(r -> r.getBook().getTitle().equalsIgnoreCase(book.getTitle()) && r.getReturnDate() == null)
+                .findFirst()
+                .orElse(null);
+
+        if (record == null) {
+            System.out.println("No active borrow record found for this member and book!");
             return;
         }
 
         record.setReturnDate(LocalDate.now());
-
         long daysBorrowed = java.time.temporal.ChronoUnit.DAYS.between(record.getBorrowDate(), record.getReturnDate());
         if (daysBorrowed > 14) {
             record.setPenalty((daysBorrowed - 14) * 100.0);
@@ -99,17 +99,27 @@ public class BorrowRecordActions {
 
         borrowRecordRepository.update(record);
 
-        Book book = record.getBook();
         book.setAvailableCopies(book.getAvailableCopies() + 1);
         bookRepository.update(book);
 
         System.out.println("Book returned successfully. Penalty: " + record.getPenalty());
     }
 
+    // Print all borrow records
     public void printAllBorrowRecords() {
         List<BorrowRecord> records = borrowRecordRepository.findAll();
         if (records.isEmpty()) {
             System.out.println("No borrow records found.");
+        } else {
+            records.forEach(System.out::println);
+        }
+    }
+
+    public void printBorrowRecordsByMemberName() {
+        String memberName = Helper.getStringFromUser("Enter Member Name: ");
+        List<BorrowRecord> records = borrowRecordRepository.findByMemberName(memberName);
+        if (records.isEmpty()) {
+            System.out.println("No borrow records found for member: " + memberName);
         } else {
             records.forEach(System.out::println);
         }
