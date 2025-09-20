@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -29,4 +30,13 @@ public class Member {
 
     @Column(name = "membership_date")
     private LocalDate membership_date;
+
+    public LocalDate getMembershipDate() {
+        return membership_date;
+    }
+
+    public String getMembershipDateString() {
+        if (membership_date == null) return "N/A";
+        return membership_date.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+    }
 }

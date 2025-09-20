@@ -47,5 +47,23 @@ public class AuthorActions {
                     .list();
         }
     }
+
+    public void printAllAuthors() {
+        List<Author> authors = authorRepository != null ? authorRepository.findAll() : authorList;
+
+        if (authors == null || authors.isEmpty()) {
+            System.out.println("No authors found.");
+            return;
+        }
+
+        System.out.println("\n--- All Authors ---");
+        for (Author author : authors) {
+            System.out.println("ID: " + author.getId());
+            System.out.println("Name: " + author.getName());
+            System.out.println("Nationality: " + author.getNationality());
+            System.out.println("BirthDate: " + author.getBirthDate());
+            System.out.println("---------------------");
+        }
+    }
     }
 

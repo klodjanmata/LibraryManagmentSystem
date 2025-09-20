@@ -1,9 +1,11 @@
 package Repository;
 
+import Entity.Author;
 import Entity.Genre;
 import Util.HibernateUtil;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
+
 
 import java.util.List;
 
@@ -85,5 +87,21 @@ public class GenreRepository {
         }
 
         return genres;
+    }
+
+    public void printAllGenres(GenreRepository genreRepo) {
+        List<Genre> genres = genreRepo.findAll();
+
+        if (genres == null || genres.isEmpty()) {
+            System.out.println("No genres found.");
+            return;
+        }
+
+        System.out.println("\n--- All Genres ---");
+        for (Genre g : genres) {
+            System.out.println("ID: " + g.getId());
+            System.out.println("Name: " + g.getName());
+            System.out.println("------------------");
+        }
     }
 }

@@ -20,10 +20,12 @@ public class BorrowRecordActions {
     private MemberRepository memberRepository;
     private BookRepository bookRepository;
 
-    public BorrowRecordActions() {
-        this.borrowRecordRepository = new BorrowrecordRepository();
-        this.memberRepository = new MemberRepository();
-        this.bookRepository = new BookRepository();
+    public BorrowRecordActions(BorrowrecordRepository borrowRecordRepository,
+                               BookRepository bookRepository,
+                               MemberRepository memberRepository) {
+        this.borrowRecordRepository = borrowRecordRepository;
+        this.bookRepository = bookRepository;
+        this.memberRepository = memberRepository;
     }
 
     public void addBorrowRecord() {
@@ -76,7 +78,7 @@ public class BorrowRecordActions {
     public void returnBook() {
         System.out.println("Enter Borrow Record ID:");
         Long recordId = Helper.readLong();
-        BorrowRecord record = findById(recordId);  // use our safe findById
+        BorrowRecord record = findById(recordId);
 
         if (record == null) {
             System.out.println("Borrow record not found!");
@@ -92,7 +94,7 @@ public class BorrowRecordActions {
 
         long daysBorrowed = java.time.temporal.ChronoUnit.DAYS.between(record.getBorrowDate(), record.getReturnDate());
         if (daysBorrowed > 14) {
-            record.setPenalty((daysBorrowed - 14) * 100.);
+            record.setPenalty((daysBorrowed - 14) * 100.0);
         }
 
         borrowRecordRepository.update(record);

@@ -40,8 +40,11 @@ public class Book {
     @Column(name = "published_year")
     private int publishedYear;
 
-
     @Column(name = "available_copies", nullable = false)
     private int availableCopies = 0;
+
+    // Add a description field
+    @Column(name = "description")
+    private String description;
 
 }

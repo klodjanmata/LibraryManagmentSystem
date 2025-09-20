@@ -2,7 +2,6 @@ import Actions.*;
 import Repository.*;
 import Util.Helper;
 import Util.HibernateUtil;
-import Util.Printer;
 
 import java.util.ArrayList;
 
@@ -20,7 +19,6 @@ public class Application {
     private GenreRepository genreRepository;
     private BorrowrecordRepository borrowRecordRepository;
 
-    // Constructor
     public Application() {
         authorRepository = new AuthorRepository();
         bookRepository = new BookRepository();
@@ -32,11 +30,12 @@ public class Application {
         bookActions = new BookActions(bookRepository, authorRepository, genreRepository, new ArrayList<>());
         memberActions = new MemberActions(memberRepository);
         genreActions = new GenreActions(genreRepository);
-        borrowRecordActions = new BorrowRecordActions();
+        borrowRecordActions = new BorrowRecordActions(borrowRecordRepository, bookRepository, memberRepository);
     }
 
     public static void main(String[] args) {
         Application app = new Application();
+
         while (true) {
             Menu.showMainMenu();
             int choice = Helper.getIntFromUser("Number: ");
@@ -49,50 +48,65 @@ public class Application {
     private boolean manageAction(int choice) {
         switch (choice) {
             case 1:
-                authorActions.addAuthor();
+                String authorName = Helper.getStringFromUser("Enter author name to search (leave empty for all): ");
+                if (authorName.isEmpty()) {
+                    authorRepository.findAll().forEach(System.out::println);
+                } else {
+                    authorActions.findByName(authorName).forEach(System.out::println);
+                }
+                Menu.showAuthorMenu(authorActions);
                 break;
+
             case 2:
-                Printer.printAuthors(authorRepository.findAll());
+                String bookTitle = Helper.getStringFromUser("Enter book title to search (leave empty for all): ");
+                if (bookTitle.isEmpty()) {
+                    bookRepository.findAll().forEach(System.out::println);
+                } else {
+                    bookActions.findByTitle(bookTitle).forEach(System.out::println);
+                }
+                Menu.showBookMenu(bookActions);
                 break;
+
             case 3:
-                bookActions.addBook();
+                String genreName = Helper.getStringFromUser("Enter genre name to search (leave empty for all): ");
+                if (genreName.isEmpty()) {
+                    genreRepository.findAll().forEach(System.out::println);
+                } else {
+                    genreRepository.findByName(genreName).forEach(System.out::println);
+                }
+                Menu.showGenreMenu(genreActions, genreRepository);
                 break;
+
             case 4:
-                Printer.printBooks(bookRepository.findAll());
+                String memberName = Helper.getStringFromUser("Enter member name to search (leave empty for all): ");
+                if (memberName.isEmpty()) {
+                    memberRepository.findAll().forEach(System.out::println);
+                } else {
+
+                    memberActions.findByName(memberName).forEach(System.out::println);
+                }
+                Menu.showMemberMenu(memberActions);
                 break;
+
             case 5:
-                genreActions.addGenre();
+                Menu.showBorrowRecordMenu(borrowRecordActions);
                 break;
+
             case 6:
-                Printer.printGenres(genreRepository.findAll());
-                break;
-            case 7:
-                memberActions.addMember();
-                break;
-            case 8:
-                Printer.printMembers(memberRepository.findAll());
-                break;
-            case 9:
-                borrowRecordActions.addBorrowRecord();
-                break;
-            case 10:
-                borrowRecordActions.returnBook();
-                break;
-            case 11:
-                Printer.printBorrowRecords(borrowRecordRepository.findAll());
-                break;
-            case 12:
                 Menu.showFilterMenu(bookActions, authorActions, genreRepository);
                 break;
+
             case 0:
                 System.out.println("System Shut Down");
                 shutDown();
                 return true;
+
             default:
                 System.out.println("Invalid choice!");
         }
         return false;
     }
+
 
     private void shutDown() {
         HibernateUtil.shutdown();
